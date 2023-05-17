@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.services;
 import guru.springframework.spring6restmvc.modul.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,4 +54,43 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getById(UUID consumerId) {
         return customerMap.get(consumerId);
     }
+
+    @Override
+    public Customer handlePost(Customer customer) {
+
+        Customer savedCustomer = Customer.builder()
+                .id(UUID.randomUUID())
+                .customerName(customer.getCustomerName())
+                .version(1)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        customerMap.put(savedCustomer.getId(), savedCustomer);
+        return savedCustomer;
+    }
+
+    @Override
+    public Customer updateById(UUID customerId, Customer customer) {
+        Customer existingCustomer = customerMap.get(customerId);
+        existingCustomer.setCustomerName(customer.getCustomerName());
+        existingCustomer.setUpdateDate(LocalDateTime.now());
+        return existingCustomer;
+    }
+
+    @Override
+    public void updateCustomerPatchById(UUID customerId, Customer customer) {
+        Customer existing = customerMap.get(customerId);
+
+        if (StringUtils.hasText(customer.getCustomerName())) {
+            existing.setCustomerName(customer.getCustomerName());
+        }
+    }
+
+    @Override
+    public void deleteByBeerId(UUID customerId) {
+        customerMap.remove(customerId);
+    }
+
+
 }

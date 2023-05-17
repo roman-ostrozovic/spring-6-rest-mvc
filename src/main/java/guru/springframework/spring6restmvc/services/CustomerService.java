@@ -12,4 +12,12 @@ public interface CustomerService {
     List<Customer> listConsumers();
 
     Customer getById(UUID consumerId);
+
+    Customer handlePost(Customer customer);
+
+    Customer updateById(UUID customerId, Customer customer);
+
+    void updateCustomerPatchById(UUID customerId, Customer customer);
+
+    void deleteByBeerId(UUID customerId);
 }
